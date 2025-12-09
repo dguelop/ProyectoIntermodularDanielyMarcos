@@ -1,8 +1,9 @@
-Actualizar el sistema (opcional pero recomendado):
-sudo apt update && sudo apt upgrade -y
+INSTALAR DOVECOT:
+sudo apt install dovecot-imapd dovecot-pop3d
 
-Instalar Dovecot si aún no está instalado:
-sudo apt install dovecot-core dovecot-imapd dovecot-pop3d -y
+ACTUALIZAR:
+sudo apt update
+sudo apt upgrade
 
 Configurar Dovecot para usar usuarios locales:
 Editar el archivo de autenticación:
@@ -11,7 +12,6 @@ sudo nano /etc/dovecot/conf.d/10-auth.conf
 Asegurarse de que la línea siguiente esté descomentada y configurada así:
 !include auth-system.conf.ext
 
-Comentar cualquier otra inclusión como auth-passwdfile.conf.ext.
 Configurar la ubicación del correo:
 Editar el archivo:
 sudo nano /etc/dovecot/conf.d/10-mail.conf
@@ -30,25 +30,19 @@ sudo maildirmake.dovecot /etc/skel/Maildir/.Spam
 Crear un nuevo usuario local:
 sudo adduser usuario1
 
-Se creará automáticamente el directorio ~/Maildir gracias a /etc/skel.
 Reiniciar Dovecot para aplicar cambios:
 sudo systemctl restart dovecot
 
 1. Probar la autenticación del usuario
-Usa el comando doveadm auth test para verificar que el usuario puede autenticarse:
-
 sudo doveadm auth test usuario1
 
-Ingresa la contraseña cuando se solicite.
-Si todo está bien, verás un mensaje como:
+Debe salir:
 passdb: usuario1 auth succeeded
 
 2. Verificar que el directorio Maildir existe
-Asegúrate de que el directorio Maildir se creó en el home del usuario:
-
 ls /home/usuario1/Maildir
 
-Deberías ver carpetas como cur, new, tmp, .Drafts, .Sent, etc.
+Debe haber carpetas como cur, new, tmp, .Drafts, .Sent, etc.
 
 3. Probar conexión IMAP (con OpenSSL)
 Conéctate al puerto IMAPS (993) para probar manualmente:
@@ -70,6 +64,7 @@ Si hay errores, revísalos en:
 
 sudo tail -f /var/log/mail.log
 
+FIREWALL:
 1. Habilitar UFW
 sudo ufw enable
 
@@ -96,4 +91,10 @@ sudo ufw allow ssh
 4. Verificar reglas aplicadas
 sudo ufw status
 
-Deberías ver los puertos 143, 993, etc., listados como permitidos.
+
+SSL (POR HACER):
+sudo openssl req -new -x509 -days 1000 -nodes -out "/etc/dovecot/dovecot.pem" \
+    -keyout "/etc/dovecot/private/dovecot.pem"
+
+ssl_cert = </etc/dovecot/private/dovecot.pem
+ssl_key = </etc/dovecot/private/dovecot.key
