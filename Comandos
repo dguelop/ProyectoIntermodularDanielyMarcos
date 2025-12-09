@@ -1,0 +1,99 @@
+Actualizar el sistema (opcional pero recomendado):
+sudo apt update && sudo apt upgrade -y
+
+Instalar Dovecot si aún no está instalado:
+sudo apt install dovecot-core dovecot-imapd dovecot-pop3d -y
+
+Configurar Dovecot para usar usuarios locales:
+Editar el archivo de autenticación:
+sudo nano /etc/dovecot/conf.d/10-auth.conf
+
+Asegurarse de que la línea siguiente esté descomentada y configurada así:
+!include auth-system.conf.ext
+
+Comentar cualquier otra inclusión como auth-passwdfile.conf.ext.
+Configurar la ubicación del correo:
+Editar el archivo:
+sudo nano /etc/dovecot/conf.d/10-mail.conf
+
+Establecer el formato Maildir en el directorio personal:
+mail_location = maildir:~/Maildir
+
+Crear la estructura de directorios para nuevos usuarios:
+Dovecot necesita que los nuevos usuarios tengan el directorio Maildir en su home. Para que se cree automáticamente al agregar un usuario, usa:
+sudo maildirmake.dovecot /etc/skel/Maildir
+sudo maildirmake.dovecot /etc/skel/Maildir/.Drafts
+sudo maildirmake.dovecot /etc/skel/Maildir/.Sent
+sudo maildirmake.dovecot /etc/skel/Maildir/.Trash
+sudo maildirmake.dovecot /etc/skel/Maildir/.Spam
+
+Crear un nuevo usuario local:
+sudo adduser usuario1
+
+Se creará automáticamente el directorio ~/Maildir gracias a /etc/skel.
+Reiniciar Dovecot para aplicar cambios:
+sudo systemctl restart dovecot
+
+1. Probar la autenticación del usuario
+Usa el comando doveadm auth test para verificar que el usuario puede autenticarse:
+
+sudo doveadm auth test usuario1
+
+Ingresa la contraseña cuando se solicite.
+Si todo está bien, verás un mensaje como:
+passdb: usuario1 auth succeeded
+
+2. Verificar que el directorio Maildir existe
+Asegúrate de que el directorio Maildir se creó en el home del usuario:
+
+ls /home/usuario1/Maildir
+
+Deberías ver carpetas como cur, new, tmp, .Drafts, .Sent, etc.
+
+3. Probar conexión IMAP (con OpenSSL)
+Conéctate al puerto IMAPS (993) para probar manualmente:
+
+openssl s_client -connect localhost:993
+
+Una vez conectado, inicia sesión:
+
+a login usuario1 contraseña
+
+Si recibes:
+
+a OK [CAPABILITY ...] Logged in
+
+la autenticación y el servicio funcionan correctamente.
+
+4. Revisar los logs de Dovecot
+Si hay errores, revísalos en:
+
+sudo tail -f /var/log/mail.log
+
+1. Habilitar UFW
+sudo ufw enable
+
+2. Establecer políticas predeterminadas
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+3. Permitir servicios necesarios
+IMAP (no cifrado):
+sudo ufw allow 143/tcp
+
+IMAPS (cifrado, recomendado):
+sudo ufw allow 993/tcp
+
+POP3 (no cifrado):
+sudo ufw allow 110/tcp
+
+POP3S (cifrado):
+sudo ufw allow 995/tcp
+
+SSH (esencial para acceso remoto):
+sudo ufw allow ssh
+
+4. Verificar reglas aplicadas
+sudo ufw status
+
+Deberías ver los puertos 143, 993, etc., listados como permitidos.
