@@ -92,6 +92,12 @@ sudo ufw allow ssh
 sudo ufw status
 
 
+sudo apt install mailutils -> Darle a local only y poner un dominio
+
+Para enviar un correo de prueba:
+echo "Prueba" | mail -s "Test" usuario1
+
+
 SSL (POR HACER):
 sudo openssl req -new -x509 -days 1000 -nodes -out "/etc/dovecot/dovecot.pem" \
     -keyout "/etc/dovecot/private/dovecot.pem"
