@@ -98,9 +98,16 @@ Para enviar un correo de prueba:
 echo "Prueba" | mail -s "Test" usuario1
 
 
-SSL (POR HACER):
+SSL:
 sudo openssl req -new -x509 -days 1000 -nodes -out "/etc/dovecot/dovecot.pem" \
     -keyout "/etc/dovecot/private/dovecot.pem"
 
+Ponemos sudo nano /etc/dovecot/conf.d/10-ssl.conf y comprobamos que estén puestas las siguientes directivas:
+ssl = yes
 ssl_cert = </etc/dovecot/private/dovecot.pem
 ssl_key = </etc/dovecot/private/dovecot.key
+
+
+CLIENTE:
+Thunderbird:
+Comando ifconfig para saber la IP de la máquina
