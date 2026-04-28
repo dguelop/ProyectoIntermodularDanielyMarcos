@@ -1,0 +1,2 @@
+ssh 192.168.0.240 -l usuario
+pause

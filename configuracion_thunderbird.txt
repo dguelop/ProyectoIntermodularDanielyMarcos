@@ -1,0 +1,39 @@
+nano /etc/postfix/main.cf
+
+Debe tener esto:
+
+inet_interfaces = all
+
+
+systemctl restart postfix
+
+
+CERTIFICADO:
+
+sudo openssl req -new -x509 -days 1000 -nodes -out "/etc/dovecot/dovecot.pem" -keyout "/etc/dovecot/private/dovecot.pem"
+
+sudo chown root:postfix /etc/dovecot/private/dovecot.pem
+sudo chmod 640 /etc/dovecot/private/dovecot.pem
+
+sudo chown root:postfix /etc/dovecot/dovecot.pem
+sudo chmod 644 /etc/dovecot/dovecot.pem
+
+Configurar Dovecot para usarlo en /etc/dovecot/conf.d/10-ssl.conf:
+ssl = yes
+ssl_cert = </etc/dovecot/dovecot.pem
+ssl_key = </etc/dovecot/private/dovecot.pem
+
+sudo systemctl restart dovecot
+
+
+Postfix:
+sudo nano /etc/postfix/main.cf
+
+Hay que tener estas líneas:
+
+smtpd_use_tls = yes
+smtpd_tls_cert_file = /etc/dovecot/dovecot.pem
+smtpd_tls_key_file = /etc/dovecot/private/dovecot.pem
+smtpd_tls_security_level = may
+
+sudo systemctl restart postfix

@@ -1,0 +1,12 @@
+Permitir firewall: sudo ufw allow 'Apache Full'
+
+
+
+
+
+nano /etc/roundcube/config.inc.php
+cambiar default_host y smtp_server por mail.ubuntuserver.com
+smtp_port = 25
+smtp_user = ''
+
+systemctl restart apache2
