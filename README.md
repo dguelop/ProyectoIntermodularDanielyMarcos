@@ -156,7 +156,7 @@ usuario2@proyectosmr.abrdns.com
 Acceso:
 
 ```
-http://(IP del servidor)
+http://proyectosmr.abrdns.com
 ```
 
 Permite:
