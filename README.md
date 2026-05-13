@@ -121,8 +121,8 @@ Maildir:
 ## 🔹 IMAP (recepción)
 
 * Servidor: `mail.proyectosmr.abrdns.com`
-* Puerto: `993`
-* Seguridad: SSL/TLS
+* Puerto: `143`
+* Seguridad: STARTTLS
 
 ## 🔹 SMTP (envío)
 
@@ -156,7 +156,7 @@ usuario2@proyectosmr.abrdns.com
 Acceso:
 
 ```
-http://mail.proyectosmr.abrdns.com/roundcube
+http://(IP del servidor)
 ```
 
 Permite:
@@ -189,7 +189,7 @@ Funciones:
 | ------ | ------------------------ |
 | 25     | SMTP (entrada)           |
 | 587    | SMTP (envío autenticado) |
-| 993    | IMAP seguro              |
+| 143    | IMAP seguro              |
 | 10000  | Webmin                   |
 
 ---
@@ -201,6 +201,7 @@ sudo ufw allow 25
 sudo ufw allow 587
 sudo ufw allow 993
 sudo ufw allow 10000
+sudo ufw allow 80
 ```
 
 ---
